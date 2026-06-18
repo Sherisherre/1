@@ -2,10 +2,50 @@ import React, { useState, useRef } from 'react';
 import { BaseLink } from '../types';
 import { useFavorites } from '../context/FavoritesContext';
 import { motion, AnimatePresence } from 'motion/react';
+import { SITE_DATA } from '../data';
 
 interface LinkButtonProps {
   link: BaseLink;
+  showSource?: boolean;
   key?: any;
+}
+
+export function findLinkSource(href: string) {
+  for (const card of SITE_DATA) {
+    if (card.links) {
+      const match = card.links.find(l => l.href === href);
+      if (match) {
+        return { cardTitle: card.title, sectionTitle: '' };
+      }
+    }
+    if (card.sections) {
+      for (const section of card.sections) {
+        if (section.links) {
+          const match = section.links.find(l => l.href === href);
+          if (match) {
+            return { cardTitle: card.title, sectionTitle: section.title };
+          }
+        }
+      }
+    }
+    if (card.initiatives && card.initiatives.links) {
+      const match = card.initiatives.links.find(l => l.href === href);
+      if (match) {
+        return { cardTitle: card.title, sectionTitle: card.initiatives.title };
+      }
+    }
+    if (card.departments) {
+      for (const dept of card.departments) {
+        if (dept.links) {
+          const match = dept.links.find(l => l.href === href);
+          if (match) {
+            return { cardTitle: card.title, sectionTitle: dept.title };
+          }
+        }
+      }
+    }
+  }
+  return null;
 }
 
 const getTooltipText = (link: BaseLink) => {
@@ -58,7 +98,7 @@ const getTooltipText = (link: BaseLink) => {
   return typeText;
 };
 
-export default function LinkButton({ link }: LinkButtonProps) {
+export default function LinkButton({ link, showSource = false }: LinkButtonProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const [clickState, setClickState] = useState<'normal' | 'loading' | 'failed' | 'fading-out' | 'removed'>('normal');
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -67,6 +107,7 @@ export default function LinkButton({ link }: LinkButtonProps) {
   const longPressTimeout = useRef<number | null>(null);
 
   const favorited = isFavorite(link.href);
+  const source = showSource ? findLinkSource(link.href) : null;
 
   if (clickState === 'removed') return null;
 
@@ -190,9 +231,16 @@ export default function LinkButton({ link }: LinkButtonProps) {
         onTouchMove={endLongPress}
       >
         <span className="btn-content-wrapper">
-          <span className="btn-content original">
-            {link.icon && <i className={`fas ${link.icon}`}></i>}
-            <span>{link.text}</span>
+          <span className="btn-content original flex flex-col md:flex-row md:items-center justify-center gap-1.5 md:gap-3">
+            <span className="flex items-center gap-2">
+              {link.icon && <i className={`fas ${link.icon}`}></i>}
+              <span>{link.text}</span>
+            </span>
+            {showSource && source && (
+              <span className="inline-flex items-center text-[10px] md:text-[11px] font-medium bg-amber-400/10 text-amber-300 px-3 py-1 rounded-full border border-amber-400/20 whitespace-nowrap self-center transition-all leading-none">
+                {source.cardTitle}{source.sectionTitle ? ` • ${source.sectionTitle}` : ''}
+              </span>
+            )}
           </span>
           
           {isGhim && (

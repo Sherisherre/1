@@ -226,7 +226,7 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-full max-w-2xl mx-auto"
+                  className="w-full"
                 >
                   <div className="link-card span-full-width p-6 md:p-8">
                     <div className="card-header border-b border-[var(--border)] pb-4 mb-6 flex justify-between items-center">
@@ -242,9 +242,9 @@ export default function App() {
                     </div>
 
                     {favorites.length > 0 ? (
-                      <div className="button-group">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {favorites.map((link, idx) => (
-                          <LinkButton key={link.href + '-' + idx} link={link} />
+                          <LinkButton key={link.href + '-' + idx} link={link} showSource={true} />
                         ))}
                       </div>
                     ) : (
