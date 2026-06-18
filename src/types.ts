@@ -4,6 +4,7 @@ export interface BaseLink {
   icon: string;
   type?: string;
   specialAction?: 'ghim-fail' | string;
+  status?: 'active' | 'open' | 'closed' | string;
 }
 
 export interface Section {

@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'motion/react';
 interface WelcomeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onGoToLevel1: () => void;
+  onGoToLevel1?: () => void;
 }
 
-export default function WelcomeModal({ isOpen, onClose, onGoToLevel1 }: WelcomeModalProps) {
+export default function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -19,20 +19,18 @@ export default function WelcomeModal({ isOpen, onClose, onGoToLevel1 }: WelcomeM
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="modal-header">✨ مرحبًا بك في كلية الحاسب ✨</h2>
-            <div className="welcome-modal-body text-right">
-              <p>نهنئك على قبولك ونتمنى لك رحلة أكاديمية مليئة بالنجاح والإنجاز. هذا الدليل هو بوابتك للوصول إلى جميع الروابط والموارد الهامة التي ستحتاجها كطالب مستجد.</p>
-              <p>لبدء رحلتك، يمكنك الانتقال مباشرةً إلى مجموعات ومبادرات المستوى الأول.</p>
-            </div>
             <button
-              id="go-to-level1-btn"
-              className="link-button w-full mt-4 flex items-center justify-center gap-2 flex-row-reverse"
-              onClick={onGoToLevel1}
-              style={{ padding: '0.9rem 1.5rem' }}
+              className="modal-close-btn"
+              onClick={onClose}
+              title="إغلاق"
+              aria-label="إغلاق"
             >
-              <span>الانتقال لمجموعات المستوى الأول</span>
-              <i className="fas fa-arrow-left"></i>
+              <i className="fas fa-times"></i>
             </button>
+            <h2 className="modal-header">أهلاً بك في كلية الحاسب! 💻💫</h2>
+            <div className="welcome-modal-body text-right">
+              <p>دليل لكافة القنوات والمجموعات والمبادرات الطلابية لمساعدتكم في الوصول إلى مصادركم الأكاديمية بكل سهولة خلال رحلتكم الجامعية.</p>
+            </div>
           </motion.div>
         </div>
       )}
